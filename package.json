@@ -1,0 +1,96 @@
+{
+  "name": "defect-dojo-vscode-plugin",
+  "displayName": "defect-dojo-vscode-plugin",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.99.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:defect-dojo-view-product-info",
+    "onView:defect-dojo-view-findings"    
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Defect Dojo Extension Setup",
+      "properties": {
+        "defect-dojo-vscode-plugin.productName": {
+          "order": 1,
+          "type": "string",
+          "default": "",
+          "description": "Product Name Defect Dojo"
+        },
+        "defect-dojo-vscode-plugin.url": {
+          "order": 0,
+          "type": "string",
+          "default": "",
+          "description": "Base URL DefectDojo"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "defect-dojo-vscode-plugin.storeToken",
+        "title": "Defect Dojo API Token Setup"
+      },
+      {
+        "command": "defect-dojo-vscode-plugin.markAsFalsePositive",
+        "title": "Marcar Falso Positivo"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "defect-dojo-container",
+          "title": "Defect Dojo",
+          "icon": "resources/defect.png"
+        }
+      ]
+    },
+    "views": {
+      "defect-dojo-container": [
+        {
+          "type": "tree",
+          "id": "defect-dojo-view-product-info",
+          "name": "Product Info"
+        },
+        {
+          "type": "tree",
+          "id": "defect-dojo-view-findings",
+          "name": "Findings Info"
+        }
+      ]
+    },
+    "menus": {
+      "view/item/context": [{
+        "command": "defect-dojo-vscode-plugin.markAsFalsePositive",
+        "when": "viewItem == finding-item",
+        "group": "navigation"
+      }]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.99.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@typescript-eslint/parser": "^8.28.0",
+    "eslint": "^9.23.0",
+    "typescript": "^5.8.2",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1"
+  }
+}
