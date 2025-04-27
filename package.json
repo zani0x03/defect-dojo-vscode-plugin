@@ -3,6 +3,10 @@
   "displayName": "defect-dojo-vscode-plugin",
   "description": "The defect-dojo-vscode-plugin offers integration with Defect Dojo through VSCode. The idea is that the developer doesn't need to leave their 'environment' to interact with Defect Dojo.",
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zani0x03/defect-dojo-vscode-plugin"
+  },
   "engines": {
     "vscode": "^1.99.0"
   },

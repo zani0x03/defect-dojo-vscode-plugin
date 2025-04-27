@@ -10,11 +10,11 @@ After performing the configurations, product details and their open 'findings' w
 
 Upon clicking on a finding, the file will open on the line where the finding is located. The details of that finding will be displayed for 5 seconds, after which the description will disappear.
 
-![Feature Open Finding](/resources/images/readme/feature_open_finding.png)
+![Feature Open Finding](https://github.com/zani0x03/defect-dojo-vscode-plugin/blob/main/resources/images/readme/feature_open_finding.png)
 
 By right-clicking on a finding, it's possible to mark it as a false positive.
 
-![Feature Mark False Positive](/resources/images/readme/feature_mark_false_positive.png)
+![Feature Mark False Positive](https://github.com/zani0x03/defect-dojo-vscode-plugin/blob/main/resources/images/readme/feature_mark_false_positive.png)
 
 ## Extension Settings
 
@@ -24,7 +24,7 @@ Three settings need attention to get up and running.
 
 API Token for communication with the Defect Dojo API.
 
-![API Token Setup](/resources/images/readme/config_token.png)
+![API Token Setup](https://github.com/zani0x03/defect-dojo-vscode-plugin/blob/main/resources/images/readme/config_token.png)
 
 
 `BaseUrl`
@@ -35,7 +35,7 @@ Base URL of Defect Dojo.
 
 Name of the product for which you want to view findings. For proper functionality, the product name must be related to the source code that will be opened in Visual Studio Code.
 
-![Config Settings](/resources/images/readme/config_settings.png)
+![Config Settings](https://github.com/zani0x03/defect-dojo-vscode-plugin/blob/main/resources/images/readme/config_settings.png)
 
 ## Known Issues
 - If your product has more than 25 vulnerabilities, only the first 25 will be displayed;
