@@ -1,71 +1,48 @@
-# defect-dojo-vscode-plugin README
+# defect-dojo-vscode-plugin
 
-This is the README for your extension "defect-dojo-vscode-plugin". After writing up a brief description, we recommend including the following sections.
+## Overview
+
+The defect-dojo-vscode-plugin offers integration with Defect Dojo through VSCode. The idea is that the developer doesn't need to leave their 'environment' to interact with Defect Dojo.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+After performing the configurations, product details and their open 'findings' will be displayed.
 
-For example if there is an image subfolder under your extension project workspace:
+Upon clicking on a finding, the file will open on the line where the finding is located. The details of that finding will be displayed for 5 seconds, after which the description will disappear.
 
-\!\[feature X\]\(images/feature-x.png\)
+![Feature Open Finding](/resources/images/readme/feature_open_finding.png)
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+By right-clicking on a finding, it's possible to mark it as a false positive.
 
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+![Feature Mark False Positive](/resources/images/readme/feature_mark_false_positive.png)
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+Three settings need attention to get up and running.
 
-For example:
+`Token`
 
-This extension contributes the following settings:
+API Token for communication with the Defect Dojo API.
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+![API Token Setup](/resources/images/readme/config_token.png)
+
+
+`BaseUrl`
+
+Base URL of Defect Dojo.
+
+`ProductName`
+
+Name of the product for which you want to view findings. For proper functionality, the product name must be related to the source code that will be opened in Visual Studio Code.
+
+![Config Settings](/resources/images/readme/config_settings.png)
 
 ## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- If your product has more than 25 vulnerabilities, only the first 25 will be displayed;
+- To improve the display of the finding description, currently it is shown for 5 seconds and then disappears. The idea is to show the description when hovering the mouse over the line of the finding.
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
-
 ### 1.0.0
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+Initial release of defect-dojo-vscode-plugin

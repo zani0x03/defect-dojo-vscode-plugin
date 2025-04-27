@@ -1,8 +1,8 @@
 {
   "name": "defect-dojo-vscode-plugin",
   "displayName": "defect-dojo-vscode-plugin",
-  "description": "",
-  "version": "0.0.1",
+  "description": "The defect-dojo-vscode-plugin offers integration with Defect Dojo through VSCode. The idea is that the developer doesn't need to leave their 'environment' to interact with Defect Dojo.",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.99.0"
   },
@@ -39,7 +39,7 @@
       },
       {
         "command": "defect-dojo-vscode-plugin.markAsFalsePositive",
-        "title": "Marcar Falso Positivo"
+        "title": "Mark False Positive"
       },
       {
         "command": "defect-dojo-vscode-plugin.refresh",

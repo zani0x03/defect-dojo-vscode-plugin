@@ -32,11 +32,11 @@ export class ProductView implements vscode.TreeDataProvider<vscode.TreeItem> {
         const token = await this.context.secrets.get('defectDojoToken');
 
         if (!configs.url || !configs.url  || !token) {
-            vscode.window.showErrorMessage('Configurações inválidas.');
+            vscode.window.showErrorMessage('Invalid configurations.');
             return;
         }
 
-        await this.fetchProduto(token, configs.url , configs.productName );
+        await this.fetchProduct(token, configs.url , configs.productName );
 
         if (this.product.name.length > 0){
             await this.fetchFindings(token, configs.url , this.product.name );
@@ -46,7 +46,7 @@ export class ProductView implements vscode.TreeDataProvider<vscode.TreeItem> {
     }
 
 
-    private async fetchProduto(token: string, url: string, productName: string){
+    private async fetchProduct(token: string, url: string, productName: string){
         try {
             // Realizar requisição à API
             const response = await fetch(`${url}/api/v2/products?name_exact=${productName}`, {
@@ -56,7 +56,7 @@ export class ProductView implements vscode.TreeDataProvider<vscode.TreeItem> {
             });
 
             if (!response.ok) {
-                vscode.window.showErrorMessage('Erro ao obter dados do produto.');
+                vscode.window.showErrorMessage('Error retrieving product data.');
             }
 
             const apiProduct = await response.json() as ApiResponse<Product>;
@@ -68,7 +68,7 @@ export class ProductView implements vscode.TreeDataProvider<vscode.TreeItem> {
 
 
         } catch (error) {
-            vscode.window.showErrorMessage(`Erro: ${error}`);
+            vscode.window.showErrorMessage(`Error: ${error}`);
         }
     }
 
@@ -81,7 +81,7 @@ export class ProductView implements vscode.TreeDataProvider<vscode.TreeItem> {
             });
 
             if (!response.ok) {
-                vscode.window.showErrorMessage('Erro ao obter findings.');
+                vscode.window.showErrorMessage('Error retrieving findings.');
                 return;
             }
 
@@ -90,7 +90,7 @@ export class ProductView implements vscode.TreeDataProvider<vscode.TreeItem> {
             this.product.findings = apiFindings.results;
 
         } catch (error) {
-            vscode.window.showErrorMessage(`Erro: ${error}`);
+            vscode.window.showErrorMessage(`Error: ${error}`);
         }
     }
 

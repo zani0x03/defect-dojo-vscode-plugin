@@ -13,12 +13,12 @@ export async function activate(context: vscode.ExtensionContext) {
     // Armazenar o token
     const storeToken = async () => {
         const token = await vscode.window.showInputBox({
-            prompt: 'Digite seu token para acesso a API do DefectDojo'
+            prompt: 'Please provide your API token for access to the DefectDojo API. I will keep it confidential.'
         });
 
         if (token) {
             await secretStorage.store('defectDojoToken', token);
-            vscode.window.showInformationMessage('Token armazenado com sucesso!');
+            vscode.window.showInformationMessage('Token stored successfully.');
         }
     };	
 
@@ -33,7 +33,7 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('defect-dojo-vscode-plugin.openFile', async (filePath: string, lineNumber: number, findingTitle: string, findingDescription: string) => {
         const workspaceFolders = vscode.workspace.workspaceFolders;
         if (!workspaceFolders) {
-            vscode.window.showErrorMessage('Nenhum diretório aberto no VS Code.');
+            vscode.window.showErrorMessage('No directory is open in VS Code.');
             return;
         }
 
@@ -48,8 +48,7 @@ export async function activate(context: vscode.ExtensionContext) {
               const range = new vscode.Range(line.range.start, line.range.end);
               editor.selection = new vscode.Selection(range.start, range.end);
               editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
-              vscode.window.setStatusBarMessage(`Vulnerability: ${findingTitle} - ${findingDescription}`, 5000); // Exibe por 5 segundos
-                // Adiciona decoração temporária com estilo destacado
+              vscode.window.setStatusBarMessage(`Vulnerability: ${findingTitle} - ${findingDescription}`, 5000); 
                 const decorationType = vscode.window.createTextEditorDecorationType({
                   before: {
                       contentText: ` ℹ️ ${findingDescription} `,
@@ -65,14 +64,14 @@ export async function activate(context: vscode.ExtensionContext) {
 
               editor.setDecorations(decorationType, [range]);
 
-              // Limpa a decoração após um curto período (simula o desaparecimento do "hover")
+
               setTimeout(() => {
                   editor.setDecorations(decorationType, []);
-              }, 5000); // 3000 milissegundos = 3 segundos
+              }, 5000); 
             }
 
         } catch (error) {
-            vscode.window.showErrorMessage(`Erro ao abrir o arquivo: ${error}`);
+            vscode.window.showErrorMessage(`Error opening file.: ${error}`);
         }
     }),
     vscode.commands.registerCommand('defect-dojo-vscode-plugin.markAsFalsePositive', async (item) => {
@@ -109,9 +108,9 @@ export async function activate(context: vscode.ExtensionContext) {
 
     }
     catch (error) {
-      vscode.window.showErrorMessage(`Erro ao chamar a API Marcar Falso Positivo: ${error}`);
+      vscode.window.showErrorMessage(`Error calling the 'Mark as False Positive' API.: ${error}`);
     }
-    vscode.window.showInformationMessage("Sucesso ao marcar finding falso positivo");
+    vscode.window.showInformationMessage("Successfully marked finding as false positive.");
     // findingsView.refresh();
   }
 }
