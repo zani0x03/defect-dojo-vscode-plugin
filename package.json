@@ -10,8 +10,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onView:defect-dojo-view-product-info",
-    "onView:defect-dojo-view-findings"    
+    "onView:defect-dojo-view-product-info"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -41,14 +40,22 @@
       {
         "command": "defect-dojo-vscode-plugin.markAsFalsePositive",
         "title": "Marcar Falso Positivo"
-      }
+      },
+      {
+        "command": "defect-dojo-vscode-plugin.refresh",
+        "title": "Refresh",
+        "icon": {
+          "light": "resources/images/light/refresh.svg",
+          "dark": "resources/images/dark/refresh.svg"
+        }
+      }      
     ],
     "viewsContainers": {
       "activitybar": [
         {
           "id": "defect-dojo-container",
           "title": "Defect Dojo",
-          "icon": "resources/defect.png"
+          "icon": "resources/images/defect.png"
         }
       ]
     },
@@ -58,15 +65,15 @@
           "type": "tree",
           "id": "defect-dojo-view-product-info",
           "name": "Product Info"
-        },
-        {
-          "type": "tree",
-          "id": "defect-dojo-view-findings",
-          "name": "Findings Info"
         }
       ]
     },
     "menus": {
+      "view/title": [{
+        "command": "defect-dojo-vscode-plugin.refresh",
+        "when": "view == defect-dojo-view-product-info",
+        "group": "navigation"
+      }],      
       "view/item/context": [{
         "command": "defect-dojo-vscode-plugin.markAsFalsePositive",
         "when": "viewItem == finding-item",

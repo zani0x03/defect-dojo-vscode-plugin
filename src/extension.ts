@@ -2,7 +2,6 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { ProductView } from './views/productView';
-import { FindingsView } from './views/findingsView';
 import { FindingTreeItem } from './classes/findingTreeItem';
 
 // This method is called when your extension is activated
@@ -25,60 +24,61 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	const productView = new ProductView(context);
 	vscode.window.createTreeView('defect-dojo-view-product-info', { treeDataProvider: productView });
-    const findingsView = new FindingsView(context);
-    vscode.window.createTreeView('defect-dojo-view-findings', { treeDataProvider: findingsView });
-
 
 	context.subscriptions.push(
+    vscode.commands.registerCommand('defect-dojo-vscode-plugin.refresh', () => {
+      productView.refresh();
+    }),    
 		vscode.commands.registerCommand('defect-dojo-vscode-plugin.storeToken', storeToken),
-        vscode.commands.registerCommand('defect-dojo-vscode-plugin.openFile', async (filePath: string, lineNumber: number, findingTitle: string, findingDescription: string) => {
-            const workspaceFolders = vscode.workspace.workspaceFolders;
-            if (!workspaceFolders) {
-                vscode.window.showErrorMessage('Nenhum diretório aberto no VS Code.');
-                return;
+    vscode.commands.registerCommand('defect-dojo-vscode-plugin.openFile', async (filePath: string, lineNumber: number, findingTitle: string, findingDescription: string) => {
+        const workspaceFolders = vscode.workspace.workspaceFolders;
+        if (!workspaceFolders) {
+            vscode.window.showErrorMessage('Nenhum diretório aberto no VS Code.');
+            return;
+        }
+
+        const fullPath = `${workspaceFolders[0].uri.fsPath}/${filePath}`;
+        try{
+            const document = await vscode.workspace.openTextDocument(vscode.Uri.file(fullPath));
+            await vscode.window.showTextDocument(document);
+
+            const editor = vscode.window.activeTextEditor;
+            if(editor){
+              const line = document.lineAt(lineNumber - 1);
+              const range = new vscode.Range(line.range.start, line.range.end);
+              editor.selection = new vscode.Selection(range.start, range.end);
+              editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
+              vscode.window.setStatusBarMessage(`Vulnerability: ${findingTitle} - ${findingDescription}`, 5000); // Exibe por 5 segundos
+                // Adiciona decoração temporária com estilo destacado
+                const decorationType = vscode.window.createTextEditorDecorationType({
+                  before: {
+                      contentText: ` ℹ️ ${findingDescription} `,
+                      color: 'var(--vscode-editor-foreground)',
+                      backgroundColor: 'var(--vscode-editor-background)',
+                      border: '2px solid var(--vscode-editor-foreground)',
+                      fontWeight: 'bold',
+                      textDecoration: 'none; !important',
+                      margin: '0 5px'
+                  },
+                  rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed
+              });
+
+              editor.setDecorations(decorationType, [range]);
+
+              // Limpa a decoração após um curto período (simula o desaparecimento do "hover")
+              setTimeout(() => {
+                  editor.setDecorations(decorationType, []);
+              }, 5000); // 3000 milissegundos = 3 segundos
             }
 
-            const fullPath = `${workspaceFolders[0].uri.fsPath}/${filePath}`;
-            try{
-                const document = await vscode.workspace.openTextDocument(vscode.Uri.file(fullPath));
-                await vscode.window.showTextDocument(document);
-
-                const editor = vscode.window.activeTextEditor;
-                if(editor){
-                  const line = document.lineAt(lineNumber - 1);
-                  const range = new vscode.Range(line.range.start, line.range.end);
-                  editor.selection = new vscode.Selection(range.start, range.end);
-                  editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
-                  vscode.window.setStatusBarMessage(`Vulnerability: ${findingTitle} - ${findingDescription}`, 5000); // Exibe por 5 segundos
-                    // Adiciona decoração temporária com estilo destacado
-                    const decorationType = vscode.window.createTextEditorDecorationType({
-                      before: {
-                          contentText: ` ℹ️ ${findingDescription} `,
-                          color: 'var(--vscode-editor-foreground)',
-                          backgroundColor: 'var(--vscode-editor-background)',
-                          border: '2px solid var(--vscode-editor-foreground)',
-                          fontWeight: 'bold',
-                          textDecoration: 'none; !important',
-                          margin: '0 5px'
-                      },
-                      rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed
-                  });
-
-                  editor.setDecorations(decorationType, [range]);
-
-                  // Limpa a decoração após um curto período (simula o desaparecimento do "hover")
-                  setTimeout(() => {
-                      editor.setDecorations(decorationType, []);
-                  }, 5000); // 3000 milissegundos = 3 segundos
-                }
-
-            } catch (error) {
-                vscode.window.showErrorMessage(`Erro ao abrir o arquivo: ${error}`);
-            }
-        }),
-        vscode.commands.registerCommand('defect-dojo-vscode-plugin.markAsFalsePositive', (item) => {
-          callAPIFalsePositivo(item);
-        })        
+        } catch (error) {
+            vscode.window.showErrorMessage(`Erro ao abrir o arquivo: ${error}`);
+        }
+    }),
+    vscode.commands.registerCommand('defect-dojo-vscode-plugin.markAsFalsePositive', async (item) => {
+      await callAPIFalsePositivo(item);
+      productView.refresh();
+    })        
 	);
 
   async function callAPIFalsePositivo(item:FindingTreeItem): Promise<void> {
@@ -112,7 +112,7 @@ export async function activate(context: vscode.ExtensionContext) {
       vscode.window.showErrorMessage(`Erro ao chamar a API Marcar Falso Positivo: ${error}`);
     }
     vscode.window.showInformationMessage("Sucesso ao marcar finding falso positivo");
-    findingsView.refresh();
+    // findingsView.refresh();
   }
 }
 
