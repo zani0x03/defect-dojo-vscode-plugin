@@ -4,7 +4,9 @@ import { ApiResponse } from '../interfaces/apiResponse';
 import { Finding } from '../interfaces/finding';
 import { FindingTreeItem } from '../classes/findingTreeItem';
 
-export class ProductView implements vscode.TreeDataProvider<vscode.TreeItem> {
+const ACTIVE_FILTER_KEY = 'DefectDojoActiveFilterKey'; 
+
+export class ProductView implements vscode.TreeDataProvider<vscode.TreeItem> { 
     private _onDidChangeTreeData: vscode.EventEmitter<vscode.TreeItem | undefined | null | void> = new vscode.EventEmitter<vscode.TreeItem | undefined | null | void>();
     readonly onDidChangeTreeData: vscode.Event<vscode.TreeItem | undefined | null | void> = this._onDidChangeTreeData.event;
 
@@ -30,13 +32,29 @@ export class ProductView implements vscode.TreeDataProvider<vscode.TreeItem> {
     private async fetchProductFindings(): Promise<void>{
         const configs = vscode.workspace.getConfiguration("defect-dojo-vscode-plugin");
         const token = await this.context.secrets.get('defectDojoToken');
+        let productName = "";
 
-        if (!configs.url || !configs.url  || !token) {
+        const workspaceFolders = vscode.workspace.workspaceFolders;
+        if (!workspaceFolders) {
+            vscode.window.showErrorMessage('No directory is open in VS Code.');
+            return;
+        }        
+        let wf = workspaceFolders[0].uri.path ;
+        let f = workspaceFolders[0].uri.fsPath ;         
+
+        if (!configs.url|| !token) {
             vscode.window.showErrorMessage('Invalid configurations.');
             return;
         }
 
-        await this.fetchProduct(token, configs.url , configs.productName );
+        if (!configs.productName){
+          const arrProductName = workspaceFolders[0].uri.fsPath.split("\\");
+          productName = arrProductName[arrProductName.length-1];
+        }else{
+          productName = configs.productName;
+        }
+
+        await this.fetchProduct(token, configs.url , productName );
 
         if (this.product.name.length > 0){
             await this.fetchFindings(token, configs.url , this.product.name );
@@ -57,6 +75,7 @@ export class ProductView implements vscode.TreeDataProvider<vscode.TreeItem> {
 
             if (!response.ok) {
                 vscode.window.showErrorMessage('Error retrieving product data.');
+                return;
             }
 
             const apiProduct = await response.json() as ApiResponse<Product>;
@@ -73,8 +92,26 @@ export class ProductView implements vscode.TreeDataProvider<vscode.TreeItem> {
     }
 
     private async fetchFindings(token: string, url: string, productName: string){
+        const _currentFilter = this.context.workspaceState.get<string>(ACTIVE_FILTER_KEY) || 'all';
+        let filter = "";
+
+        switch (_currentFilter) {
+          case "active":
+            filter = "&active=true";
+            break;
+          case "active_verified":
+            filter = "&active=true&verified=true";
+            break;
+          case "active_unverified":
+            filter = "&active=true&verified=false";
+            break;
+          case "inactive":
+            filter = "&active=false";
+            break;
+        }
+
         try {
-            const response = await fetch(`${url}/api/v2/findings?active=true&o=severity&product_name=${productName}`, {
+            const response = await fetch(`${url}/api/v2/findings?o=severity&product_name=${productName}${filter}`, {
                 headers: {
                     'Authorization': `Token ${token}`
                 }

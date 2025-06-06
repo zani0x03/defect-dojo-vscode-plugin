@@ -47,13 +47,23 @@
         "title": "Mark False Positive"
       },
       {
+        "command": "defect-dojo-vscode-plugin.markAsVerified",
+        "title": "Mark Verified"
+      }      
+      ,
+      {
         "command": "defect-dojo-vscode-plugin.refresh",
         "title": "Refresh",
         "icon": {
           "light": "resources/images/light/refresh.svg",
           "dark": "resources/images/dark/refresh.svg"
         }
-      }      
+      },
+      {
+        "command": "defect-dojo-vscode-plugin.openFilterMenu",
+        "title": "Filter Findings",
+        "icon": "$(ellipsis)"
+      }            
     ],
     "viewsContainers": {
       "activitybar": [
@@ -77,12 +87,23 @@
       "view/title": [{
         "command": "defect-dojo-vscode-plugin.refresh",
         "when": "view == defect-dojo-view-product-info",
-        "group": "navigation"
-      }],      
+        "group": "navigation@1"
+      },
+        {
+          "command": "defect-dojo-vscode-plugin.openFilterMenu",
+          "when": "view == defect-dojo-view-product-info",
+          "group": "navigation@2" 
+        }    
+    ],      
       "view/item/context": [{
         "command": "defect-dojo-vscode-plugin.markAsFalsePositive",
         "when": "viewItem == finding-item",
-        "group": "navigation"
+        "group": "navigation@1"
+      },
+      {
+        "command": "defect-dojo-vscode-plugin.markAsVerified",
+        "when": "viewItem == finding-item",
+        "group": "navigation@2"
       }]
     }
   },
