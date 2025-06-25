@@ -49,8 +49,7 @@
       {
         "command": "defect-dojo-vscode-plugin.markAsVerified",
         "title": "Mark Verified"
-      }      
-      ,
+      },
       {
         "command": "defect-dojo-vscode-plugin.refresh",
         "title": "Refresh",
